@@ -1,72 +1,40 @@
 <!DOCTYPE html>
-    });
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVI Converter</title>
 
-    log('✅ FFmpeg cargado');
-}
+<link rel="stylesheet" href="style.css">
 
-loadFFmpeg();
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/ffmpeg.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
 
-async function convertVideos() {
+<div class="container">
 
-    const input = document.getElementById('files');
+<h1>🎬 MP4 → AVI</h1>
+<p class="subtitle">FFmpeg ejecutándose dentro del navegador</p>
 
-    if (!input.files.length) {
-        alert('Sube archivos MP4');
-        return;
-    }
+<div id="dropZone">
+    <p>📦 Arrastra videos aquí</p>
+    <p>o</p>
+    <input type="file" id="files" multiple accept="video/mp4">
+</div>
 
-    const zip = new JSZip();
+<button id="convertBtn">Convertir Videos</button>
 
-    for (const file of input.files) {
+<div class="progressBox">
+    <div id="progressBar"></div>
+</div>
 
-        log('');
-        log('=============================');
-        log('Convirtiendo: ' + file.name);
+<div id="status">Esperando archivos...</div>
 
-        const data = await file.arrayBuffer();
+<div id="console"></div>
 
-        await ffmpeg.writeFile(file.name, new Uint8Array(data));
+</div>
 
-        const outputName = file.name.replace('.mp4', '-p.avi');
-
-        await ffmpeg.exec([
-            '-i', file.name,
-
-            '-vf',
-            'scale=160:128:force_original_aspect_ratio=decrease,pad=160:128:(ow-iw)/2:(oh-ih)/2:black,transpose=2,vflip',
-
-            '-r', '16',
-            '-acodec', 'pcm_s16le',
-            '-ac', '2',
-            '-ar', '22050',
-            '-pix_fmt', 'yuvj420p',
-            '-c:v', 'mjpeg',
-            '-q:v', '2',
-            outputName
-        ]);
-
-        const outputData = await ffmpeg.readFile(outputName);
-
-        zip.file(outputName, outputData);
-
-        log('✅ ' + outputName + ' convertido');
-    }
-
-    log('');
-    log('Creando ZIP...');
-
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(zipBlob);
-    a.download = 'videos-convertidos.zip';
-    a.click();
-
-    log('🎉 ZIP descargado');
-}
-
-document.getElementById('convertBtn').onclick = convertVideos;
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
