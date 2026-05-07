@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    background: #0d0d0d;
+    color: white;
+    font-family: monospace;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4d4d;
+    font-size: 42px;
+}
+
+.subtitle {
+    color: #999;
+}
+
+#dropZone {
+    border: 2px dashed #444;
+    padding: 40px;
+    text-align: center;
+    border-radius: 14px;
+    background: #161616;
+    transition: 0.2s;
+}
+
+#dropZone.drag {
+    border-color: #ff4d4d;
+    background: #221111;
+}
+
+input[type=file] {
+    margin-top: 10px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 14px 24px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff6666;
+}
+
+.progressBox {
+    width: 100%;
+    height: 20px;
+    background: #222;
+    border-radius: 999px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#progressBar {
+    width: 0%;
+    height: 100%;
+    background: #ff4d4d;
+    transition: width 0.2s;
+}
+
+#status {
+    margin-top: 12px;
+    color: #bbb;
+}
+
+#console {
+    margin-top: 20px;
+    background: black;
+    color: #00ff66;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    height: 350px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-size: 13px;
+}
