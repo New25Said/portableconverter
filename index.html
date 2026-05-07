@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+    });
+
+    log('✅ FFmpeg cargado');
+}
+
+loadFFmpeg();
+
+async function convertVideos() {
+
+    const input = document.getElementById('files');
+
+    if (!input.files.length) {
+        alert('Sube archivos MP4');
+        return;
+    }
+
+    const zip = new JSZip();
+
+    for (const file of input.files) {
+
+        log('');
+        log('=============================');
+        log('Convirtiendo: ' + file.name);
+
+        const data = await file.arrayBuffer();
+
+        await ffmpeg.writeFile(file.name, new Uint8Array(data));
+
+        const outputName = file.name.replace('.mp4', '-p.avi');
+
+        await ffmpeg.exec([
+            '-i', file.name,
+
+            '-vf',
+            'scale=160:128:force_original_aspect_ratio=decrease,pad=160:128:(ow-iw)/2:(oh-ih)/2:black,transpose=2,vflip',
+
+            '-r', '16',
+            '-acodec', 'pcm_s16le',
+            '-ac', '2',
+            '-ar', '22050',
+            '-pix_fmt', 'yuvj420p',
+            '-c:v', 'mjpeg',
+            '-q:v', '2',
+            outputName
+        ]);
+
+        const outputData = await ffmpeg.readFile(outputName);
+
+        zip.file(outputName, outputData);
+
+        log('✅ ' + outputName + ' convertido');
+    }
+
+    log('');
+    log('Creando ZIP...');
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(zipBlob);
+    a.download = 'videos-convertidos.zip';
+    a.click();
+
+    log('🎉 ZIP descargado');
+}
+
+document.getElementById('convertBtn').onclick = convertVideos;
+</script>
+
+</body>
+</html>
